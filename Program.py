@@ -27,11 +27,11 @@ class ML:
         joblib.dump(self.scaler, scaler_name)
 
     def loadScaler(self):
-        scaler = joblib.load(self.scaler_name)
+        #scaler = joblib.load(self.scaler_name)
+        scaler = joblib.load("nuwan.sc")
         return scaler
 
     def readDatasetAndNormalize(self):
-
         # code starts from here
         dataframe = read_csv('real_data.csv', usecols=[1], engine='python')
         dataset = dataframe.values
@@ -41,7 +41,10 @@ class ML:
         # scaler
         scaler = MinMaxScaler(feature_range=(0, 1))
         dataset = scaler.fit_transform(dataset)
+        #scaler.fit(dataset)
         self.scaler=scaler
+        self.saveScaler("nuwan.sc")
+        self.scaler_name="nuwan.sc"
         return dataset
 
     #dataset: input dataset to be trained
@@ -102,14 +105,26 @@ class ML:
         floatDataset=values.astype('float32')
 
         #scale the array
-        scaledArray=scaler.fit_transform(floatDataset)
+        scaledArray=scaler.transform(floatDataset)
+        print(scaledArray)
+        nparr=numpy.array(scaledArray)
+        #scaled=numpy.reshape(nparr, (nparr.shape[0], 1, nparr.shape[1]))
+        #print(nparr.shape[0],nparr.shape[1])
+        #change the dim of array
 
+        flatArray = nparr.flatten()
+        expandedArray = numpy.expand_dims(flatArray, axis=0)
+
+        output = numpy.reshape(expandedArray, (expandedArray.shape[0], 1, expandedArray.shape[1]))
         # make predictions
-        testPredict = model.predict(scaledArray)
+        testPredict = model.predict(output)
 
         # invert predictions
         testPredictInverted = scaler.inverse_transform(testPredict)
         print(testPredictInverted)
 
 test=ML()
-test.predict([-13.5,-15.5,-12.69])
+#dataset=test.readDatasetAndNormalize()
+#test.trainModel(dataset,"nuwan.h5")
+
+test.predict([-15.5,-9.88,-0.5])
