@@ -103,7 +103,7 @@ class ML:
 
             #scale the array
             scaledArray=scaler.transform(floatDataset)
-            print(scaledArray)
+            #print(scaledArray)
             nparr=numpy.array(scaledArray)
             #scaled=numpy.reshape(nparr, (nparr.shape[0], 1, nparr.shape[1]))
             #print(nparr.shape[0],nparr.shape[1])
@@ -118,7 +118,11 @@ class ML:
 
             # invert predictions
             testPredictInverted = scaler.inverse_transform(testPredict)
-            print(testPredictInverted)
+            outPandasArray=testPredictInverted[0]
+            outArray=numpy.array(outPandasArray)
+            outputArray=[outArray[0],outArray[1],outArray[2]]
+            #print(outputArray)
+            return outputArray
 
         except IOError:
             return "Error in reading the file!"
@@ -127,4 +131,4 @@ test=ML("nuwan")
 #dataset=test.readDatasetAndNormalize("real_data.csv")
 #test.trainModel(dataset)
 
-test.predict([-15.5,-9.88,-0.5])
+print(test.predict([-15.5,-9.88,-0.5]))
